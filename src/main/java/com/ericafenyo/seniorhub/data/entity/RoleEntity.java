@@ -24,26 +24,28 @@
 
 package com.ericafenyo.seniorhub.data.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A database entity representing an individual or entity who interacts with the application.
- */
-@Entity(name = "users")
-@EntityListeners(AuditingEntityListener.class)
+@Entity(name = "roles")
 @Data
-public class UserEntity {
+public class RoleEntity {
 
   /**
-   * The unique identifier for the user.
+   * The unique identifier for the role.
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,61 +53,45 @@ public class UserEntity {
   private Long id;
 
   /**
-   * A secondary unique identifier.
+   * The name of the role
    */
-  @Column(name = "uuid")
-  private String uuid;
+  @Column(name = "name")
+  private String name;
 
   /**
-   * The first name of the user.
+   * A brief description or explanation of the role.
    */
-  @Column(name = "first_name")
-  private String firstName;
+  @Column(name = "description")
+  private String description;
 
   /**
-   * The last name of the user.
-   */
-  @Column(name = "last_name")
-  private String lastName;
-
-  /**
-   * The email address of the user.
-   */
-  @Column(name = "email")
-  private String email;
-
-  /**
-   * The URL pointing to the user's profile photo.
-   */
-  @Column(name = "photo")
-  private String photoUrl;
-
-  /**
-   * The date and time when the user was created.
+   * The date and time when the role was created.
    */
   @CreatedDate
   @Column(name = "created_at")
   private LocalDateTime createdAt;
 
   /**
-   * The date and time when the user was last updated.
+   * The date and time when the role was last updated.
    */
   @LastModifiedDate
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
   /**
-   * Represents an address where the user leaves.
+   * The users having this role.
    */
-  @OneToOne
-  @JoinColumn(name = "address_id")
-  private AddressEntity address;
+  @ManyToMany(mappedBy = "roles")
+  private List<UserEntity> users = new ArrayList<>();
 
+  /**
+   * The actions or operations that users with this role are allowed to perform.
+   */
   @ManyToMany()
   @JoinTable(
-      name = "user_roles",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id")
+      name = "role_permission",
+      joinColumns = @JoinColumn(name = "role_id")
+      , inverseJoinColumns = @JoinColumn(name = "permission_id")
   )
-  private List<RoleEntity> roles = new ArrayList<>();
+  private List<PermissionEntity> permissions = new ArrayList<>();
 }

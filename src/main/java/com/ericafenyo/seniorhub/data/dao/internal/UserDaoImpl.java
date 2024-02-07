@@ -24,7 +24,6 @@
 
 package com.ericafenyo.seniorhub.data.dao.internal;
 
-import com.ericafenyo.seniorhub.controller.request.AddressRequest;
 import com.ericafenyo.seniorhub.controller.request.CreateUserRequest;
 import com.ericafenyo.seniorhub.data.dao.UserDao;
 import com.ericafenyo.seniorhub.data.entity.AddressEntity;
